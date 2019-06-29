@@ -3,7 +3,8 @@ import PlayGameScene from './PlayGameScene'
 
 export const gameSettings = {
   playerSpeed: 200,
-  numEnemies: 3
+  numEnemies: 3,
+  maxEnemySpeed: 5
 }
 
 export const config = {

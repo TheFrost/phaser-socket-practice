@@ -93,7 +93,7 @@ export default class PlayGameScene extends Phaser.Scene {
   }
 
   setUpEnemies () {
-    const { numEnemies } = gameSettings
+    const { numEnemies, maxEnemySpeed } = gameSettings
     const { Between } = Phaser.Math
 
     this.enemies = this.physics.add.group()
@@ -102,11 +102,12 @@ export default class PlayGameScene extends Phaser.Scene {
       const shipId = Between(1, 3)
       const ship = this.add.sprite(
         Between(0, config.width),
-        0,
+        1 - Between(0, 100),
         `ship${shipId}`
       )
 
       ship.play(`ship${shipId}_anim`)
+      ship.speed = Between(1, maxEnemySpeed)
 
       this.enemies.add(ship)
     }
@@ -178,8 +179,8 @@ export default class PlayGameScene extends Phaser.Scene {
     ship.once('animationcomplete', () => this.resetShipAfterDeath(ship))
   }
 
-  moveShip (ship, speed) {
-    ship.y += speed
+  moveShip (ship) {
+    ship.y += ship.speed
     if (ship.y > config.height) {
       this.resetShipPos(ship)
     }
@@ -217,8 +218,7 @@ export default class PlayGameScene extends Phaser.Scene {
   }
 
   moveEnemies () {
-    const { Between } = Phaser.Math
-    this.enemies.getChildren().map(enemy => this.moveShip(enemy, Between(1, 3)))
+    this.enemies.getChildren().map(enemy => this.moveShip(enemy))
   }
 
   movePlayerManager () {
