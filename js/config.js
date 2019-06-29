@@ -1,15 +1,16 @@
-import Scene1 from './Scene1'
-import Scene2 from './Scene2'
+import BootGameScene from './BootGameScene'
+import PlayGameScene from './PlayGameScene'
 
 export const gameSettings = {
-  playerSpeed: 200
+  playerSpeed: 200,
+  numEnemies: 3
 }
 
 export const config = {
   width: 360,
   height: 640,
   backgroundColor: 0x000000,
-  scene: [Scene1, Scene2],
+  scene: [BootGameScene, PlayGameScene],
   pixelArt: true,
   physics: {
     default: 'arcade',

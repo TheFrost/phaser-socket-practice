@@ -1,7 +1,8 @@
 import { Scene } from 'phaser'
 
+// assets
 import background from '../assets/background.png'
-import ship from '../assets/spritesheets/ship.png'
+import ship1 from '../assets/spritesheets/ship.png'
 import ship2 from '../assets/spritesheets/ship2.png'
 import ship3 from '../assets/spritesheets/ship3.png'
 import explosion from '../assets/spritesheets/explosion.png'
@@ -11,7 +12,7 @@ import beam from '../assets/spritesheets/beam.png'
 import fontPNG from '../assets/font/font.png'
 import fontXML from '../assets/font/font.xml'
 
-export default class Scene1 extends Scene {
+export default class BootGameScene extends Scene {
   constructor () {
     super('bootGame')
   }
@@ -19,7 +20,7 @@ export default class Scene1 extends Scene {
   preload () {
     this.load.image('background', background)
 
-    this.load.spritesheet('ship', ship, {
+    this.load.spritesheet('ship1', ship1, {
       frameWidth: 16,
       frameHeight: 16
     })
@@ -52,26 +53,34 @@ export default class Scene1 extends Scene {
 
   create () {
     this.add.text(20, 20, 'Loading game...')
-    this.scene.start('playGame')
 
+    this.setupAnimations()
+
+    this.scene.start('playGame')
+  }
+
+  setupAnimations () {
     this.anims.create({
       key: 'ship1_anim',
-      frames: this.anims.generateFrameNumbers('ship'),
+      frames: this.anims.generateFrameNumbers('ship1'),
       frameRate: 20,
       repeat: -1
     })
+
     this.anims.create({
       key: 'ship2_anim',
       frames: this.anims.generateFrameNumbers('ship2'),
       frameRate: 20,
       repeat: -1
     })
+
     this.anims.create({
       key: 'ship3_anim',
       frames: this.anims.generateFrameNumbers('ship3'),
       frameRate: 20,
       repeat: -1
     })
+
     this.anims.create({
       key: 'explode',
       frames: this.anims.generateFrameNumbers('explosion'),
@@ -89,6 +98,7 @@ export default class Scene1 extends Scene {
       frameRate: 20,
       repeat: -1
     })
+
     this.anims.create({
       key: 'gray',
       frames: this.anims.generateFrameNumbers('power-up', {

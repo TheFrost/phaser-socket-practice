@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
   players[socket.id] = {
     x: Math.floor(Math.random() * 200) + 50,
     y: 620,
-    playerId: socket.id
+    id: socket.id
   }
 
   socket.emit('currentPlayers', players)
@@ -38,9 +38,9 @@ io.on('connection', (socket) => {
 
     socket.broadcast.emit('playerMoved', players[socket.id])
   })
-  
+
   socket.on('beamShot', (scene) => {
-    
+
   })
 })
 
