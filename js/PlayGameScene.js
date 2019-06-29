@@ -49,6 +49,7 @@ export default class PlayGameScene extends Phaser.Scene {
     socket.on('newPlayer', playerInfo => this.addOtherPlayers(playerInfo))
     socket.on('disconnect', playerId => this.disconnectEventHandler(playerId))
     socket.on('playerMoved', playerInfo => this.playerMovedEventHandler(playerInfo))
+    socket.on('beamShoted', playerId => this.beamShotedEventHandler(playerId))
   }
 
   currentPlayerEventHandler (players) {
@@ -74,6 +75,14 @@ export default class PlayGameScene extends Phaser.Scene {
     this.otherPlayers.getChildren().map(player => {
       if (playerId === player.id) {
         player.setPosition(x, y)
+      }
+    })
+  }
+
+  beamShotedEventHandler (playerId) {
+    this.otherPlayers.getChildren().map(player => {
+      if (playerId === player.id) {
+        this.shootBeam(player)
       }
     })
   }
@@ -249,14 +258,14 @@ export default class PlayGameScene extends Phaser.Scene {
 
   validateInputs () {
     if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-      this.shootBeam()
+      this.shootBeam(this.player, true)
     }
   }
 
-  shootBeam () {
-    const beam = new Beam(this, this.player)
+  shootBeam (player, isSelfShoot = false) {
+    const beam = new Beam(this, player)
     beam.init()
 
-    // this.socket.emit('beamShot', this.player)
+    if (isSelfShoot) this.socket.emit('beamShot')
   }
 }

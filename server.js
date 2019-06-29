@@ -39,8 +39,8 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('playerMoved', players[socket.id])
   })
 
-  socket.on('beamShot', (scene) => {
-
+  socket.on('beamShot', () => {
+    socket.broadcast.emit('beamShoted', socket.id)
   })
 })
 
