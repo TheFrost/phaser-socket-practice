@@ -8,8 +8,8 @@ export const gameSettings = {
 }
 
 export const config = {
-  width: 360,
-  height: 640,
+  width: 256,
+  height: 272,
   backgroundColor: 0x000000,
   scene: [BootGameScene, PlayGameScene],
   pixelArt: true,
