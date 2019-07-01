@@ -46,6 +46,7 @@ export default class PlayGameScene extends Phaser.Scene {
     const { socket } = this
 
     socket.on('currentPlayers', players => this.currentPlayerEventHandler(players))
+    socket.on('currentEnemies', enemies => this.setUpEnemies(enemies))
     socket.on('newPlayer', playerInfo => this.addOtherPlayers(playerInfo))
     socket.on('disconnect', playerId => this.disconnectEventHandler(playerId))
     socket.on('playerMoved', playerInfo => this.playerMovedEventHandler(playerInfo))
@@ -92,25 +93,16 @@ export default class PlayGameScene extends Phaser.Scene {
     this.background.setOrigin(0, 0)
   }
 
-  setUpEnemies () {
-    const { numEnemies, maxEnemySpeed } = gameSettings
-    const { Between } = Phaser.Math
-
+  setUpEnemies (enemies = []) {
     this.enemies = this.physics.add.group()
 
-    for (let i = 0; i < numEnemies; i++) {
-      const shipId = Between(1, 3)
-      const ship = this.add.sprite(
-        Between(0, config.width),
-        1 - Between(0, 100),
-        `ship${shipId}`
-      )
-
-      ship.play(`ship${shipId}_anim`)
-      ship.speed = Between(1, maxEnemySpeed)
+    enemies.map(({ x, y, id, speed }) => {
+      const ship = this.add.sprite(x, y, `ship${id}`)
+      ship.play(`ship${id}_anim`)
+      ship.speed = speed
 
       this.enemies.add(ship)
-    }
+    })
   }
 
   setUpInputs () {
@@ -153,6 +145,7 @@ export default class PlayGameScene extends Phaser.Scene {
 
   addOtherPlayers ({ x, y, id: playerId }) {
     const player = this.physics.add.sprite(x, y, 'player')
+    player.play('thrust')
     player.id = playerId
     this.otherPlayers.add(player)
   }
@@ -187,20 +180,20 @@ export default class PlayGameScene extends Phaser.Scene {
   }
 
   resetShipPos (ship) {
-    ship.y = 0
-    const randomX = Phaser.Math.Between(0, config.width)
-    ship.x = randomX
+    ship.y = -100
+    // const randomX = Phaser.Math.Between(0, config.width)
+    // ship.x = randomX
   }
 
   resetShipAfterDeath (ship) {
+    this.resetShipPos(ship)
+
     const { Between } = Phaser.Math
     const shipId = Between(1, 3)
 
     ship.setTexture(`ship${shipId}`)
     ship.setVisible(true)
     ship.play(`ship${shipId}_anim`)
-
-    this.resetShipPos(ship)
   }
 
   updateScore () {

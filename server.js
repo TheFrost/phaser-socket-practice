@@ -4,6 +4,16 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const players = {}
 
+const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
+// enemies list config
+const enemies = Array.from(Array(5)).map(() => ({
+  x: getRandom(10, 260),
+  y: 1 - getRandom(0, 100),
+  speed: getRandom(1, 3),
+  id: getRandom(1, 3)
+}))
+
 // parcel bundler middleware
 const bundler = new Bundler('./*.html', {
   sourceMaps: false
@@ -21,6 +31,8 @@ io.on('connection', (socket) => {
   }
 
   socket.emit('currentPlayers', players)
+
+  socket.emit('currentEnemies', enemies)
 
   socket.broadcast.emit('newPlayer', players[socket.id])
 
